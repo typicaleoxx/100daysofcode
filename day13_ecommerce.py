@@ -39,9 +39,9 @@ def login():
         user_data=json.loads(data)
         if user_data[username]==password:
             print("Login Successful !")
-            if user_data["user_data"]=="buyer":
+            if user_data["user_type"]=="buyer":
                 buyer_menu()
-            elif user_data["user_data"]=="seller":
+            elif user_data["user_type"]=="seller":
                 seller_menu()
             break
         else:
@@ -54,6 +54,13 @@ def buyer_menu():
         print("2. View your bills ")
         print("3. Purchase products ")
         user_choice=input("Enter your choice (1/2/3)")
+        if user_choice in [1,2,3]:
+            if user_choice==1:
+                view_all_products()
+            else user_choice==2:
+                view_user_bill()
+        else: 
+            print()
     except:
         print("Error occured")
 
