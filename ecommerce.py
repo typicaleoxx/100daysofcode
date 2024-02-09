@@ -1,139 +1,165 @@
-# Requirements
-# Ask the user if he/she wants to login or register
-# Register - Ask username, password, usertype (Buyer/Seller) and store it in a file
-# Login - Ask username and password , if the username and password exists on userdata file then print login successfull. Check the usertype.
-# If the user is buyer , give him choices : View all products, View his/her bills, Purchase products. If the user is seller : Add products, View his/her products, View his/her products bills
-
-# User data = {"username":"ram","password":"ram123","usertype":"buyer"}
-
-# {'username':'password','usertype':'buyer'}
-#last requirement- seller le ni bill herne 
 import json
 
-def register():
-    user_name = input("Enter your username: ")
-    user_password = input("Create a password: ")
-    user_type = input("Are you a buyer or seller? ").lower()
+def main():
+    """
+    Main function to initiate the e-commerce system.
+    """
+    print("Welcome to the E-Commerce System!")
+    user_choice = input("Do you want to login or register (l/r): ").lower().strip()
 
-    user_data = {"user_name": user_name, "user_password": user_password, "user_type" :user_type }
-    json_user_data = json.dumps(user_data)
-
-    f = open("D:/Work/MindrisersTeaching/Poush/file/userdata.txt","a")
-    f.write(json_user_data + "-")
-    f.close()
-    user_log = input("Do you want to login? [y/n]").lower()
-    if user_log == "y":
+    if user_choice == "l":
         login()
+    elif user_choice == "r":
+        register()
     else:
-        print("thankyou for the registration!!")
+        print("Invalid choice. Exiting.")
+
+def register():
+    """
+    Function to handle user registration.
+    """
+    username = input("Please enter your username: ")
+    password = input("Please enter your password: ")
+    user_type = input("Are you a buyer or a seller (buyer/seller): ").lower().strip()
+
+    try:
+        if user_type in ["buyer", "seller"]:
+            user_data = {"username": username, "password": password, "user_type": user_type}
+            with open("user_data.json", "a") as file:
+                file.write("\n")
+                json.dump(user_data, file)
+                print("Registration successful.")
+            ask = input("Do you want to login (y/n): ").lower().strip()
+            if ask == "y":
+                login()
+            else:
+                print(f"Thank you, {username}. Have a great day.")
+        else:
+            print("Invalid user type. Registration failed.")
+    except Exception as e:
+        print(f"Registration error: {e}")
 
 def login():
-    user_name = input("Enter your username: ")
-    user_password = input("Enter your password: ")
-    
-    f = open("D:/Work/MindrisersTeaching/Poush/file/userdata.txt","r")
-    json_user_datas = f.read()
-    f.close()
-    list_user_data = json_user_datas.split("-")
-    user_login = False
-    for i in list_user_data:
-        if i!= '':
-            dict_data = json.loads(i)
-            if (user_name == dict_data.get("user_name")) and user_password == dict_data.get("user_password"):
-                user_login = True
-                type = dict_data.get("user_type") 
-                break
-            
-    if user_login == True:
-        print("Login Successful!!")
-        if type == "buyer":
-            print(f"Hi {dict_data.get('user_name')}! Welcome to your buyer account.")
-            print("What would you like to do? ")
-            user_operation = input("[view products/ purchase/ view bills] :").lower() 
-            if user_operation == "view product" or user_operation == "view products":
-                view_all_products()   
-            elif user_operation == "view bill" or user_operation == "view bills":
-                view_bills()
-            elif user_operation == "purchase":
-                purchase()
-            else:
-                print("Invalid selection!!!")
+    """
+    Function to handle user login.
+    """
+    username = input("Please enter your username: ")
+    password = input("Please enter your password: ")
+
+    try:
+        with open("user_data.json", "r") as file:
+            login_successful = False
+
+            for data in file:
+                user_data = json.loads(data)
+                if user_data.get("username") == username and user_data.get("password") == password:
+                    login_successful = True
+                    print("Login successful!")
+
+                    if user_data["user_type"] == "buyer":
+                        buyer_menu()
+                    elif user_data["user_type"] == "seller":
+                        seller_menu()
+
+                    break
+
+            if not login_successful:
+                print("Invalid username or password.")
+    except Exception as e:
+        print(f"Login error: {e}")
+
+def buyer_menu():
+    """
+    Buyer menu options.
+    """
+    try:
+        print("Buyer Menu:")
+        print("1. View all products")
+        print("2. View your bills")
+        print("3. Purchase products")
+        user_choice = input("Enter your choice (1/2/3): ").strip()
+
+        if user_choice.isdigit() and int(user_choice) in [1, 2, 3]:
+            user_choice = int(user_choice)
+            if user_choice == 1:
+                view_all_products()
+            elif user_choice == 2:
+                view_user_bills()
+            elif user_choice == 3:
+                purchase_products()
         else:
-            print(f"Hi {dict_data.get('user_name')}! Welcome to your seller account.")
-            print("What would you like to do? ")
-            user_operation = input("[add product/ view bills] :").lower() 
-            if user_operation == "add product" or user_operation == "add products":
-                add_product()
-            elif user_operation == "view bill" or user_operation == "view bills":
-                view_bills(user_name)
-            else:
-                print("Invalid selection!!!")
-        
-    else:
-        print("Invalid Credentials!!")                              
-
-def view_bills():
-    pass
-
-def purchase():
-    purchase_product_name = input('Which product do you want to buy? ')
-    purhcase_quantity = int(input('How much quantity? '))
-
-    f = open('D:/Work/MindrisersTeaching/Poush/file/productdata.txt','r')
-
-    product_json_data = f.read()
-
-    f.close()
-
-    list_product_data = product_json_data.split('-')
-
-    for i in list_product_data:
-        if i != '':
-            dict_data = json.loads(i)
-            if purchase_product_name == dict_data['product_name']:
-                price = int(dict_data['product_price'])
-
-    print('Purchase completed!')
-
-    print(f'Your total is {purhcase_quantity * price}')
-
-
+            print("Invalid choice.")
+    except Exception as e:
+        print(f"Error in buyer menu: {e}")
 
 def view_all_products():
-    f = open('D:/Work/MindrisersTeaching/Poush/file/productdata.txt','r')
+    """
+    Function to view all available products.
+    """
+    print("Viewing all products.")
 
-    product_json_data = f.read()
+def view_user_bills():
+    """
+    Function to view user bills.
+    """
+    print("Viewing user bills.")
 
-    f.close()
+def purchase_products():
+    """
+    Function to handle product purchase.
+    """
+    print("Purchasing products.")
 
-    list_product_data = product_json_data.split('-')
+def seller_menu():
+    """
+    Seller menu options.
+    """
+    try:
+        print("Seller Menu:")
+        print("1. Add product")
+        print("2. View your products")
+        print("3. View your product bills")
+        print("4. Delete product")
+        user_choice = input("Enter your choice (1/2/3/4): ").strip()
 
-    for i in list_product_data:
-        print(i)
-
-    purchase()
-
-def view_products():
-    pass
+        if user_choice.isdigit() and int(user_choice) in [1, 2, 3, 4]:
+            user_choice = int(user_choice)
+            if user_choice == 1:
+                add_product()
+            elif user_choice == 2:
+                view_seller_products()
+            elif user_choice == 3:
+                view_seller_bills()
+            elif user_choice == 4:
+                delete_product()
+        else:
+            print("Invalid choice.")
+    except Exception as e:
+        print(f"Error in seller menu: {e}")
 
 def add_product():
-    product_name = input('Enter product name : ')
-    product_description = input('Enter product description : ')
-    product_price = input('Enter product price : ')
+    """
+    Function to add a product.
+    """
+    print("Adding product.")
 
-    product_dict_data = {'product_name':product_name,'product_desc':product_description,'product_price':product_price}
-    product_json_data = json.dumps(product_dict_data)
-    f = open('D:/Work/MindrisersTeaching/Poush/file/productdata.txt','a')
+def view_seller_products():
+    """
+    Function to view seller products.
+    """
+    print("Viewing seller products.")
 
-    f.write(product_json_data + '-')
+def view_seller_bills():
+    """
+    Function to view seller bills.
+    """
+    print("Viewing seller bills.")
 
-    f.close()
+def delete_product():
+    """
+    Function to delete a product.
+    """
+    print("Deleting product.")
 
-
-user_input = input("Do you want to login or register? ").lower()
-
-if user_input == "register":
-    register()
-
-if user_input == "login":
-    login()
+if __name__ == "__main__":
+    main()

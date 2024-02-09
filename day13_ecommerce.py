@@ -26,8 +26,8 @@ def register():
                 json.dump(user_data,file)
                 print("Registration successfull")
                 file.close()
-                login=input("Do you want to login(y/n)").lower().strip()
-                if login=="y":
+                ask=input("Do you want to login(y/n)").lower().strip()
+                if ask=="y":
                     login()
                 else:
                     print(f"Alright {username}, have a great day.")
