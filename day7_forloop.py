@@ -5,4 +5,4 @@ for user in range(user):
     user_data=input("Enter data: ")
     user_info.append(user_data)
 print (user_info)
-    
+#loop
