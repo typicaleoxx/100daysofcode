@@ -2,7 +2,7 @@ import json
 
 def main():
     """
-    Main function to initiate the e-commerce system.
+    Main funfunction to initiate the e-commerce system.
     """
     print("Welcome to the E-Commerce System!")
     user_choice = input("Do you want to login or register (l/r): ").lower().strip()
