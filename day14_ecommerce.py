@@ -18,7 +18,7 @@ def register():
     user_data = {"user_name": user_name, "user_password": user_password, "user_type" :user_type }
     json_user_data = json.dumps(user_data)
 
-    f = open("D:/Work/MindrisersTeaching/Poush/file/userdata.txt","a")
+    f = open("userdata.txt","a")
     f.write(json_user_data + "-")
     f.close()
     user_log = input("Do you want to login? [y/n]").lower()
