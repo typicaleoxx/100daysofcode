@@ -31,7 +31,7 @@ def login():
     user_name = input("Enter your username: ")
     user_password = input("Enter your password: ")
     
-    f = open("D:/Work/MindrisersTeaching/Poush/file/userdata.txt","r")
+    f = open("userdata.txt","r")
     json_user_datas = f.read()
     f.close()
     list_user_data = json_user_datas.split("-")
@@ -79,7 +79,7 @@ def purchase():
     purchase_product_name = input('Which product do you want to buy? ')
     purhcase_quantity = int(input('How much quantity? '))
 
-    f = open('D:/Work/MindrisersTeaching/Poush/file/productdata.txt','r')
+    f = open('productdata.txt','r')
 
     product_json_data = f.read()
 
@@ -100,7 +100,7 @@ def purchase():
 
 
 def view_all_products():
-    f = open('D:/Work/MindrisersTeaching/Poush/file/productdata.txt','r')
+    f = open('productdata.txt','r')
 
     product_json_data = f.read()
 
@@ -123,7 +123,7 @@ def add_product():
 
     product_dict_data = {'product_name':product_name,'product_desc':product_description,'product_price':product_price}
     product_json_data = json.dumps(product_dict_data)
-    f = open('D:/Work/MindrisersTeaching/Poush/file/productdata.txt','a')
+    f = open('productdata.txt','a')
 
     f.write(product_json_data + '-')
 
